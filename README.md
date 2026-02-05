@@ -41,7 +41,7 @@ A lightweight, fast, and feature-rich Neovim configuration optimized for note-ta
 
 ```bash
 # 1. Download the setup
-cd /path/to/neovim-notes-setup
+cd path_to/neovim_md_notes
 
 # 2. Run the installer
 chmod +x install.sh
@@ -204,7 +204,7 @@ Press `Space + e` to toggle it on.
 ### Auto-save not working?
 Make sure you're editing a `.md` file. Auto-save only works for markdown files.
 
-## 💡 Tips & Tricks
+## 💡 Features
 
 1. **Use tags liberally**: Add tags like `#work #personal #important` to organize notes
 2. **Daily notes for tasks**: Use the checkbox feature in daily notes for task management
@@ -227,11 +227,6 @@ Make sure you're editing a `.md` file. Auto-save only works for markdown files.
 - View this README: Keep it handy for reference
 - Neovim help: Type `:help` in Neovim
 
-## 🎓 Learning Resources
-
-- **Neovim basics**: https://neovim.io/doc/user/
-- **Lua configuration**: https://learnxinyminutes.com/docs/lua/
-- **Markdown guide**: https://www.markdownguide.org/
 
 ## ✅ What's Included
 
@@ -292,5 +287,3 @@ Remember to check the documentation at [project website](https://example.com)
 4. Happy note-taking! 📝
 
 ---
-
-**Made with ❤️ for productive note-taking**
