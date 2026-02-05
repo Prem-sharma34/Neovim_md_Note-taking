@@ -1,5 +1,5 @@
 # 📝 Neovim Note-Taking Setup
-
+![Screenshot](example.png)
 A lightweight, fast, and feature-rich Neovim configuration optimized for note-taking. Uses **~50-100MB RAM** (vs. Obsidian's 300-500MB or Notion's 400-600MB).
 
 ## ✨ Features
