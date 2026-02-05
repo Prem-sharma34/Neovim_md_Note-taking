@@ -287,3 +287,4 @@ Remember to check the documentation at [project website](https://example.com)
 4. Happy note-taking! 📝
 
 ---
+
