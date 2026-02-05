@@ -119,23 +119,25 @@ require("lazy").setup({
   -- Treesitter for syntax highlighting
 {
     "nvim-treesitter/nvim-treesitter",
-    version = "v0.9.2", 
     build = ":TSUpdate",
+    -- We use 'main' branch for 0.11 compatibility
+    branch = "master", 
     config = function()
-      local ok, configs = pcall(require, "nvim-treesitter.configs")
-      if not ok then
-        vim.notify("Treesitter configs module not found. Highlighting might be limited.", vim.log.levels.WARN)
-        return
+      -- Defensive loading: if the module is broken, don't crash the editor
+      local status, configs = pcall(require, "nvim-treesitter.configs")
+      if not status then 
+        vim.notify("Treesitter config module failed to load", vim.log.levels.ERROR)
+        return 
       end
 
       configs.setup({
-        ensure_installed = { "markdown", "markdown_inline", "lua", "vim" },
-        auto_install = true,
+        -- Only install what you need to reduce the chance of a broken parser
+        ensure_installed = { "lua", "vim", "vimdoc", "markdown", "markdown_inline" },
         highlight = {
           enable = true,
+          -- REQUIRED for 0.11 to avoid double-highlighting/crashes
           additional_vim_regex_highlighting = false,
         },
-        indent = { enable = true },
       })
     end,
   },
