@@ -230,7 +230,7 @@ Make sure you're editing a `.md` file. Auto-save only works for markdown files.
 
 ## ✅ What's Included
 
-### Plugins (9 total - lightweight!)
+## Plugins (9 total - lightweight!)
 1. **Catppuccin** - Dark theme
 2. **nvim-tree** - File explorer
 3. **Telescope** - Fuzzy finder

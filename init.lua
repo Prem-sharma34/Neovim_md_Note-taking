@@ -48,13 +48,160 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 -- ============================================================================
+-- THEME SELECTION
+-- Change this to switch themes easily!
+-- ============================================================================
+local ACTIVE_THEME = "catppuccin" -- Options: github_dark, github_dark_dimmed, 
+                                    -- carbonfox, oxocarbon, moonlight, tokyonight,
+                                    -- vscode, kanagawa, catppuccin
+
+-- ============================================================================
 -- PLUGINS
 -- ============================================================================
 require("lazy").setup({
-  -- Color scheme
+  -- ============================================================================
+  -- THEMES COLLECTION - All minimal dark themes
+  -- ============================================================================
+  
+  -- GitHub Theme (Official GitHub colors)
+  {
+    "projekt0n/github-nvim-theme",
+    lazy = ACTIVE_THEME:match("github") == nil,
+    priority = 1000,
+    config = function()
+      require('github-theme').setup({
+        options = {
+          transparent = false,
+          hide_end_of_buffer = true,
+          hide_nc_statusline = true,
+          styles = {
+            comments = 'italic',
+            keywords = 'bold',
+            types = 'italic,bold',
+          }
+        }
+      })
+      if ACTIVE_THEME == "github_dark" then
+        vim.cmd('colorscheme github_dark')
+      elseif ACTIVE_THEME == "github_dark_dimmed" then
+        vim.cmd('colorscheme github_dark_dimmed')
+      elseif ACTIVE_THEME == "github_dark_high_contrast" then
+        vim.cmd('colorscheme github_dark_high_contrast')
+      end
+    end,
+  },
+
+  -- Nightfox (Carbonfox variant - sleek and minimal)
+  {
+    'EdenEast/nightfox.nvim',
+    lazy = ACTIVE_THEME ~= "carbonfox",
+    priority = 1000,
+    config = function()
+      require('nightfox').setup({
+        options = {
+          transparent = false,
+          terminal_colors = true,
+          dim_inactive = false,
+          styles = {
+            comments = "italic",
+            keywords = "bold",
+            types = "italic,bold",
+          }
+        }
+      })
+      if ACTIVE_THEME == "carbonfox" then
+        vim.cmd('colorscheme carbonfox')
+      end
+    end,
+  },
+
+  -- Oxocarbon (Modern IBM Carbon-inspired)
+  {
+    'nyoom-engineering/oxocarbon.nvim',
+    lazy = ACTIVE_THEME ~= "oxocarbon",
+    priority = 1000,
+    config = function()
+      if ACTIVE_THEME == "oxocarbon" then
+        vim.opt.background = "dark"
+        vim.cmd('colorscheme oxocarbon')
+      end
+    end,
+  },
+
+  -- Moonlight (Deep blue-purple tones)
+  {
+    'shaunsingh/moonlight.nvim',
+    lazy = ACTIVE_THEME ~= "moonlight",
+    priority = 1000,
+    config = function()
+      if ACTIVE_THEME == "moonlight" then
+        vim.cmd('colorscheme moonlight')
+      end
+    end,
+  },
+
+  -- Tokyo Night (Clean and modern)
+  {
+    'folke/tokyonight.nvim',
+    lazy = ACTIVE_THEME ~= "tokyonight",
+    priority = 1000,
+    config = function()
+      require("tokyonight").setup({
+        style = "night", -- storm, moon, night
+        transparent = false,
+        terminal_colors = true,
+        styles = {
+          comments = { italic = true },
+          keywords = { italic = false },
+        },
+      })
+      if ACTIVE_THEME == "tokyonight" then
+        vim.cmd('colorscheme tokyonight')
+      end
+    end,
+  },
+
+  -- VSCode Dark+ (Familiar VSCode aesthetic)
+  {
+    'Mofiqul/vscode.nvim',
+    lazy = ACTIVE_THEME ~= "vscode",
+    priority = 1000,
+    config = function()
+      require('vscode').setup({
+        transparent = false,
+        italic_comments = true,
+        disable_nvimtree_bg = true,
+      })
+      if ACTIVE_THEME == "vscode" then
+        vim.cmd('colorscheme vscode')
+      end
+    end,
+  },
+
+  -- Kanagawa (Inspired by the Great Wave painting)
+  {
+    'rebelot/kanagawa.nvim',
+    lazy = ACTIVE_THEME ~= "kanagawa",
+    priority = 1000,
+    config = function()
+      require('kanagawa').setup({
+        compile = false,
+        undercurl = true,
+        commentStyle = { italic = true },
+        keywordStyle = { italic = false },
+        transparent = false,
+      })
+      if ACTIVE_THEME == "kanagawa" then
+        vim.cmd('colorscheme kanagawa')
+      end
+    end,
+  },
+
+  -- Catppuccin (Your original theme - kept as fallback)
   {
     "catppuccin/nvim",
     name = "catppuccin",
+    lazy = ACTIVE_THEME ~= "catppuccin",
     priority = 1000,
     config = function()
       require("catppuccin").setup({
@@ -67,9 +214,15 @@ require("lazy").setup({
           markdown = true,
         },
       })
-      vim.cmd.colorscheme "catppuccin"
+      if ACTIVE_THEME == "catppuccin" then
+        vim.cmd.colorscheme "catppuccin"
+      end
     end,
   },
+
+  -- ============================================================================
+  -- ESSENTIAL PLUGINS (Same as your original config)
+  -- ============================================================================
 
   -- File explorer
   {
@@ -117,13 +270,11 @@ require("lazy").setup({
   },
 
   -- Treesitter for syntax highlighting
-{
+  {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    -- We use 'main' branch for 0.11 compatibility
     branch = "master", 
     config = function()
-      -- Defensive loading: if the module is broken, don't crash the editor
       local status, configs = pcall(require, "nvim-treesitter.configs")
       if not status then 
         vim.notify("Treesitter config module failed to load", vim.log.levels.ERROR)
@@ -131,11 +282,9 @@ require("lazy").setup({
       end
 
       configs.setup({
-        -- Only install what you need to reduce the chance of a broken parser
         ensure_installed = { "lua", "vim", "vimdoc", "markdown", "markdown_inline" },
         highlight = {
           enable = true,
-          -- REQUIRED for 0.11 to avoid double-highlighting/crashes
           additional_vim_regex_highlighting = false,
         },
       })
@@ -176,14 +325,27 @@ require("lazy").setup({
     end,
   },
 
-  -- Status line
+  -- Status line (automatically adapts to theme)
   {
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
+      -- Auto-detect theme for lualine
+      local theme_map = {
+        github_dark = 'auto',
+        github_dark_dimmed = 'auto',
+        carbonfox = 'nightfox',
+        oxocarbon = 'auto',
+        moonlight = 'auto',
+        tokyonight = 'tokyonight',
+        vscode = 'vscode',
+        kanagawa = 'kanagawa',
+        catppuccin = 'catppuccin',
+      }
+      
       require('lualine').setup({
         options = {
-          theme = 'catppuccin',
+          theme = theme_map[ACTIVE_THEME] or 'auto',
           component_separators = '|',
           section_separators = '',
         },
@@ -234,7 +396,6 @@ vim.api.nvim_create_autocmd("FileType", {
       local line = vim.api.nvim_get_current_line()
       local col = vim.api.nvim_win_get_cursor(0)[2]
       
-      -- Check if we're in a list
       local checkbox = line:match("^%s*[-*+]%s+%[.%]%s+")
       local bullet = line:match("^%s*[-*+]%s+")
       local numbered = line:match("^%s*%d+%.%s+")
@@ -245,7 +406,6 @@ vim.api.nvim_create_autocmd("FileType", {
       elseif bullet then
         local indent = line:match("^%s*")
         local marker = line:match("^%s*([-*+])")
-        -- If line is empty (just the marker), remove it
         if line:match("^%s*[-*+]%s*$") then
           return "<BS><BS><BS>"
         end
@@ -300,7 +460,6 @@ keymap('n', '<leader>nd', function()
   vim.fn.mkdir(notes_dir .. '/daily', 'p')
   vim.cmd('edit ' .. file_path)
   
-  -- Add template if file is new
   if vim.fn.filereadable(file_path) == 0 then
     local lines = {
       '# Daily Note - ' .. date,
@@ -351,6 +510,43 @@ keymap('n', '<leader>ml', function()
   end
 end, { desc = 'Insert link' })
 
+-- Theme switcher (NEW!)
+keymap('n', '<leader>th', function()
+  local themes = {
+    'github_dark',
+    'github_dark_dimmed', 
+    'carbonfox',
+    'oxocarbon',
+    'moonlight',
+    'tokyonight',
+    'vscode',
+    'kanagawa',
+    'catppuccin',
+  }
+  
+  vim.ui.select(themes, {
+    prompt = 'Select Theme:',
+  }, function(choice)
+    if choice then
+      -- Map theme names to colorscheme commands
+      local theme_commands = {
+        github_dark = 'github_dark',
+        github_dark_dimmed = 'github_dark_dimmed',
+        carbonfox = 'carbonfox',
+        oxocarbon = 'oxocarbon',
+        moonlight = 'moonlight',
+        tokyonight = 'tokyonight',
+        vscode = 'vscode',
+        kanagawa = 'kanagawa',
+        catppuccin = 'catppuccin',
+      }
+      
+      vim.cmd('colorscheme ' .. theme_commands[choice])
+      print('Theme changed to: ' .. choice)
+    end
+  end)
+end, { desc = 'Switch theme' })
+
 -- Quick save
 keymap('n', '<leader>w', ':w<CR>', opts)
 
@@ -366,9 +562,9 @@ keymap('n', '<S-Tab>', ':bprevious<CR>', opts)
 keymap('n', '<leader>bd', ':bdelete<CR>', opts)
 
 -- Window management
-keymap('n', '<leader>sv', ':vsplit<CR>', opts)
-keymap('n', '<leader>sh', ':split<CR>', opts)
-keymap('n', '<leader>sc', ':close<CR>', opts)
+keymap('n', '<leader>sh', ':vsplit<CR>', opts)
+keymap('n', '<leader>su', ':split<CR>', opts)
+keymap('n', '<leader>da', ':close<CR>', opts)
 
 -- Clear search highlighting
 keymap('n', '<Esc>', ':noh<CR>', opts)
@@ -481,5 +677,6 @@ vim.api.nvim_create_user_command('NewTemplate', function(opts)
   end
 end, { nargs = 1 })
 
--- Print welcome message
-print("📝 Note-taking setup loaded! Use <Space>ff to find notes, <Space>nn for new note")
+-- Print welcome message with current theme
+print("📝 Note-taking setup loaded! Active theme: " .. ACTIVE_THEME)
+print("Use <Space>ff to find notes, <Space>nn for new note, <Space>th to switch themes")
